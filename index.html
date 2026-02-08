@@ -7,97 +7,6 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        #loading {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s;
-        }
-        
-        .cpp-text {
-            font-size: 42px;
-            margin-bottom: 10px;
-            color: #fff;
-            font-weight: bold;
-            text-shadow: 0 0 20px rgba(106, 17, 203, 0.7);
-        }
-        
-        .progress-container {
-            width: 80%;
-            max-width: 300px;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 2px;
-            overflow: hidden;
-            position: relative;
-            margin-top: 50px;
-        }
-        
-        .progress-bar {
-            position: absolute;
-            height: 100%;
-            width: 100%;
-            transform: scaleX(0);
-            transform-origin: left center;
-            background: linear-gradient(90deg, #6a11cb 0%, #2575fc 100%);
-            animation: loadProgress 2.5s ease-out forwards;
-        }
-        
-        .progress-bar::before, .progress-bar::after {
-            content: '';
-            position: absolute;
-            height: 100%;
-            width: 50%;
-            top: 0;
-            background: inherit;
-        }
-        
-        .progress-bar::before {
-            left: 0;
-            transform-origin: left center;
-            animation: loadFromLeft 1.25s ease-out forwards;
-        }
-        
-        .progress-bar::after {
-            right: 0;
-            transform-origin: right center;
-            animation: loadFromRight 1.25s ease-out 1.25s forwards;
-        }
-        
-        .progress-numbers {
-            position: absolute;
-            top: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 1px;
-            white-space: nowrap;
-        }
-        
-        @keyframes loadFromLeft {
-            0% { transform: scaleX(0); }
-            100% { transform: scaleX(1); }
-        }
-        
-        @keyframes loadFromRight {
-            0% { transform: scaleX(0); }
-            100% { transform: scaleX(1); }
-        }
-        
-        @keyframes loadProgress {
-            0% { transform: scaleX(0); }
-            100% { transform: scaleX(1); }
-        }
-        
         body {
             background: linear-gradient(135deg, #ffd6e7 0%, #ffb8d9 100%);
             min-height: 100vh;
@@ -109,12 +18,6 @@
             perspective: 1200px;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             padding: 20px 0;
-            opacity: 0;
-            animation: fadeIn 0.8s 2.5s forwards;
-        }
-        
-        @keyframes fadeIn {
-            to { opacity: 1; }
         }
         
         .scene {
@@ -125,6 +28,12 @@
             transform-style: preserve-3d;
             margin-top: 30px;
             padding-bottom: 50px;
+            animation: fadeIn 1s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
         
         .card-container {
@@ -132,6 +41,27 @@
             width: 100%;
             margin-bottom: 35px;
             transform-style: preserve-3d;
+            animation: cardAppear 0.8s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .card-container:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+        
+        .card-container:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes cardAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
         
         .card {
@@ -167,17 +97,11 @@
             opacity: 0.85;
         }
         
-        #photo-card {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            transform: translate3d(0px, 0px, 60px) rotateY(5deg);
-            height: 300px;
-            padding: 10px;
-        }
-        
         #text-card-1 {
             background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
             transform: translate3d(0px, 0px, 30px) rotateY(-4deg);
             padding-top: 45px;
+            margin-top: 50px;
         }
         
         #text-card-2 {
@@ -218,37 +142,12 @@
             transform-style: preserve-3d;
         }
         
-        .photo-container {
-            width: 100%;
-            height: 100%;
-            border-radius: 16px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.03);
-        }
-        
-        #displayed-photo {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            border-radius: 16px;
-            margin: 0;
-            padding: 0;
-        }
-        
         .card-header {
             display: flex;
             align-items: center;
             margin-bottom: 18px;
             padding-bottom: 12px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-        }
-        
-        .card-icon {
-            display: none;
         }
         
         .card-title {
@@ -270,17 +169,6 @@
             margin-bottom: 14px;
         }
         
-        .card-content ul {
-            padding-left: 22px;
-            margin: 14px 0;
-        }
-        
-        .card-content li {
-            margin-bottom: 10px;
-            position: relative;
-            padding-left: 8px;
-        }
-        
         .card-content li:before {
             content: "•";
             color: #6a11cb;
@@ -292,32 +180,21 @@
     </style>
 </head>
 <body>
-    <div id="loading">
-        <div class="cpp-text">C++</div>
-        <div class="progress-container">
-            <div class="progress-bar"></div>
-            <div class="progress-numbers" id="progressNumbers">- 0% -</div>
-        </div>
-    </div>
-    
     <div class="scene" id="scene">
-        <div class="card-container" id="photo-container">
-            <div class="card-shadow"></div>
-            <div class="card" id="photo-card">
-                <div class="photo-container">
-                    <img id="displayed-photo" src="https://i.ibb.co/4nfpGr48/picture.jpg" alt="C++学习展示">
-                </div>
-            </div>
-        </div>
-        
         <div class="card-container" id="text-container-1">
             <div class="card-shadow"></div>
             <div class="card" id="text-card-1">
                 <div class="card-header">
-                    <h3 class="card-title">学习进展反馈</h3>
+                    <h3 class="card-title">优势亮点</h3>
                 </div>
                 <div class="card-content">
-                    <p>孩子今天的课程完成的非常棒哦，尤其是在对于for循环的次数判断以及复合条件判断这里，这里的逻辑还是比较复杂的，但是咱孩子做这块完全没啥问题，真的让我眼前一亮，咱们后边也继续保持住这股干劲</p>
+                    <p> <strong>1.  基础语法掌握扎实</strong>，本次诊断中，补全代码、修正基础错误的准确率很高，这是学好C++的基础，也是CTL考级入门阶段的核心要求，继续保持</p>
+
+                    <p> <strong>2.  非常有耐心、有责任心</strong>，遇到有困难的题，不会急躁放弃，而是跟着老师的引导，一步步排查问题，这种认真坚持的态度，不管是后续学习，还是参加CTL考级、图灵杯，都是很大的优势</p>
+
+                    <p> <strong>3.  有自己的思考</strong>，面对逻辑拆解任务时，能理解解题步骤，不盲目跟风，甚至有自己的小想法，这也是编程学习中非常宝贵的能力</p>
+
+                    <p> <strong>4.  课堂上很配合</strong>，遇到不懂的地方会主动提问，后续我也会继续针对孩子的疑问，做好1v1点拨，帮孩子把疑问及时解决</p>
                 </div>
             </div>
         </div>
@@ -326,64 +203,66 @@
             <div class="card-shadow"></div>
             <div class="card" id="text-card-2">
                 <div class="card-header">
-                    <h3 class="card-title">提升建议</h3>
+                    <h3 class="card-title">赛考&后续学习建议</h3>
                 </div>
                 <div class="card-content">
-                    <p><strong>需要加强的方向：</strong></p><p>重点还是在于咱们课后的选择题部分</p><p>孩子对于这块还是会有些粗心的问题存在</p><p>估计是课后着急下课了，所以有两道题没有仔细看</p><p>咱们后边也跟孩子说一下，做题的时候不要着急</p><p>认真看仔细做，如果做错了，咱们也要及时让孩子把错题更正一下，要是准备一个错题本就更好啦</p><p>加油加油</p>
-                </div>
+                    <p><strong>结合孩子本次的诊断表现，目前孩子的基础和逻辑思维，完全适配C++CTL考级入门阶段，不用盲目拔高，稳步推进就好</strong></p>
+                    <p><strong>1.  短期（1-2个月）：</strong></p><p>重点巩固基础语法、提升逻辑拆解和调试能力</p>
+                    <p>我会针对性布置专项小任务，同时利用小班优势，对孩子进行针对性点拨，帮孩子补齐薄弱点</p>
+                    <p><strong>2.  赛考规划：</strong></p>
+                    <p>本赛季赛事报名安排在春季，与班级进度完全符合</p>
+                    <p>按照目前的情况稳扎稳打，春季先尝试参与CTL考级一级、图灵杯比赛，保考冲赛</p>
+                    <p>让孩子感受c++阶段不同的专业赛考氛围，积累经验，培养自信心</p>
+                    <p><strong>3.  日常陪伴：</strong></p>
+                    <p>辛苦作为家长的您在家陪孩子练习或看到孩子练习时，多给予鼓励</p>
+                    <p>不要因为孩子偶尔调试不出错误就批评，多引导孩子独立思考，慢慢培养孩子的自主学习能力，培养自驱力。</p>
             </div>
         </div>
     </div>
 
     <script>
-        // 页面加载完成后执行
+        // 页面加载完成后直接开始浮动效果
         window.addEventListener('DOMContentLoaded', () => {
-            const loading = document.getElementById('loading');
-            const progressNumbers = document.getElementById('progressNumbers');
+            // 给卡片添加入场动画
+            const containers = document.querySelectorAll('.card-container');
+            containers.forEach((container, index) => {
+                container.style.animation = `cardAppear 0.8s ease-out ${index * 0.2}s forwards`;
+            });
             
-            // 进度条动画
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 1;
-                if (progress <= 100) {
-                    progressNumbers.textContent = '- ' + progress + '% -';
-                }
-                
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        loading.style.opacity = '0';
-                        loading.style.visibility = 'hidden';
-                        startEnhancedFloat();
-                    }, 500);
-                }
-            }, 35);
+            // 短暂延迟后开始浮动效果
+            setTimeout(() => {
+                startEnhancedFloat();
+            }, 800);
         });
         
-        // 浮动效果 - 大幅增强版本
+        // 增强版浮动效果 - 让方框有明显漂浮感
         function startEnhancedFloat() {
             const scene = document.getElementById('scene');
             const containers = document.querySelectorAll('.card-container');
             
             let time = 0;
+            
             function updateFloat() {
                 time += 0.015;
                 
-                // 场景整体浮动 - 大幅度增强
-                const sceneFloatX = Math.sin(time * 0.6) * 2.5;
-                const sceneFloatY = Math.cos(time * 0.4) * 2.0;
-                const sceneFloatYPos = Math.sin(time * 0.8) * 12;
+                // 场景整体浮动 - 大幅增加浮动幅度
+                const sceneFloatX = Math.sin(time * 0.6) * 3.5;  // 从2.5增加到3.5
+                const sceneFloatY = Math.cos(time * 0.4) * 2.8;  // 从2.0增加到2.8
+                const sceneFloatYPos = Math.sin(time * 0.8) * 18; // 从12增加到18
                 
                 scene.style.transform = 'rotateX(' + (5 + sceneFloatX) + 'deg) rotateY(' + sceneFloatY + 'deg) translateY(' + sceneFloatYPos + 'px)';
                 
-                // 每个卡片独立浮动 - 大幅增强
+                // 每个卡片独立浮动 - 大幅增强漂浮感
                 containers.forEach((container, index) => {
-                    const delay = index * 0.3;
+                    const delay = index * 0.4;
                     
-                    // 大幅增加浮动幅度
-                    const frequency = 0.7 + index * 0.1;
-                    const amplitude = 6 + index * 0.8;
+                    // 大幅增加浮动幅度 - 增强漂浮感
+                    const frequency = 0.6 + index * 0.15;  // 降低频率使浮动更柔和
+                    const amplitude = 10 + index * 1.2;    // 增加幅度到10-12px
                     const cardFloat = Math.sin((time + delay) * frequency) * amplitude;
+                    
+                    // 添加额外的左右摆动
+                    const horizontalSwing = Math.cos((time + delay) * (0.4 + index * 0.05)) * 2;
                     
                     // 根据卡片ID设置不同的基础变换
                     const card = container.querySelector('.card');
@@ -391,35 +270,33 @@
                     
                     let rotateX = 0, rotateY = 0, translateZ = 0;
                     
-                    if (cardId === 'photo-card') {
-                        rotateX = Math.sin((time + delay) * (0.5 + index * 0.1)) * 1.2;
-                        rotateY = 5 + Math.cos((time + delay) * (0.6 - index * 0.05)) * 0.9;
-                        translateZ = 60;
-                    } else if (cardId === 'text-card-1') {
-                        rotateX = Math.sin((time + delay) * (0.5 + index * 0.1)) * 1.2;
-                        rotateY = -4 + Math.cos((time + delay) * (0.6 - index * 0.05)) * 0.9;
+                    if (cardId === 'text-card-1') {
+                        // 增加卡片自身的旋转幅度
+                        rotateX = Math.sin((time + delay) * (0.45 + index * 0.12)) * 1.8;  // 从1.2增加到1.8
+                        rotateY = -4 + Math.cos((time + delay) * (0.55 - index * 0.08)) * 1.4; // 从0.9增加到1.4
                         translateZ = 30;
                     } else if (cardId === 'text-card-2') {
-                        rotateX = Math.sin((time + delay) * (0.5 + index * 0.1)) * 1.2;
-                        rotateY = 6 + Math.cos((time + delay) * (0.6 - index * 0.05)) * 0.9;
+                        rotateX = Math.sin((time + delay) * (0.45 + index * 0.12)) * 1.8;  // 从1.2增加到1.8
+                        rotateY = 6 + Math.cos((time + delay) * (0.55 - index * 0.08)) * 1.4; // 从0.9增加到1.4
                         translateZ = 15;
                     }
                     
-                    // 应用卡片变换 - 确保和表情一起移动
-                    card.style.transform = 'translate3d(0px, 0px, ' + translateZ + 'px) rotateY(' + rotateY + 'deg) rotateX(' + rotateX + 'deg)';
+                    // 应用卡片变换 - 增强漂浮感
+                    card.style.transform = 'translate3d(' + horizontalSwing + 'px, 0px, ' + translateZ + 'px) rotateY(' + rotateY + 'deg) rotateX(' + rotateX + 'deg)';
                     
-                    // 透明框浮动 - 大幅增强
+                    // 透明框浮动 - 增强阴影动画
                     const shadow = container.querySelector('.card-shadow');
                     if (shadow) {
-                        const shadowX = Math.cos((time + delay) * (0.4 + index * 0.05)) * 1.8;
-                        const shadowY = Math.sin((time + delay) * (0.5 - index * 0.1)) * 1.5;
+                        const shadowX = Math.cos((time + delay) * (0.35 + index * 0.05)) * 2.5;  // 从1.8增加到2.5
+                        const shadowY = Math.sin((time + delay) * (0.45 - index * 0.1)) * 2.2;   // 从1.5增加到2.2
                         shadow.style.transform = 'translate(12px, 12px) translateZ(-20px) rotateX(' + shadowX + 'deg) rotateY(' + shadowY + 'deg)';
                         
-                        const shadowOpacity = 0.75 + Math.sin(time * 0.5 + delay) * 0.1;
+                        // 增强阴影透明度变化
+                        const shadowOpacity = 0.75 + Math.sin(time * 0.6 + delay) * 0.15; // 从0.1增加到0.15
                         shadow.style.opacity = shadowOpacity;
                     }
                     
-                    // 应用整体容器浮动
+                    // 应用整体容器浮动 - 上下浮动
                     container.style.transform = 'translateY(' + cardFloat + 'px)';
                     
                     // 为表情应用相同的变换 - 通过CSS变量传递
@@ -427,14 +304,23 @@
                     container.style.setProperty('--emoji-rotate-y', rotateY + 'deg');
                     container.style.setProperty('--emoji-translate-z', (translateZ + 40) + 'px');
                     container.style.setProperty('--emoji-float-y', cardFloat + 'px');
+                    container.style.setProperty('--emoji-swing-x', horizontalSwing + 'px');
                 });
                 
                 requestAnimationFrame(updateFloat);
             }
             
-            // 使用CSS变量控制表情的变换
+            // 使用CSS变量控制表情的变换 - 增强表情跟随效果
             const style = document.createElement('style');
-            style.textContent = '#text-container-1::before, #text-container-2::before { transform: translateX(-50%) translateY(var(--emoji-float-y, -30px)) translateZ(var(--emoji-translate-z, 40px)) rotateY(var(--emoji-rotate-y, 0deg)) rotateX(var(--emoji-rotate-x, 0deg)); }';
+            style.textContent = `
+                #text-container-1::before, #text-container-2::before { 
+                    transform: translateX(calc(-50% + var(--emoji-swing-x, 0px))) 
+                               translateY(var(--emoji-float-y, -30px)) 
+                               translateZ(var(--emoji-translate-z, 40px)) 
+                               rotateY(var(--emoji-rotate-y, 0deg)) 
+                               rotateX(var(--emoji-rotate-x, 0deg)); 
+                }
+            `;
             document.head.appendChild(style);
             
             updateFloat();
